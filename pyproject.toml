@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "credit-default-service"
+version = "0.1.0"
+description = "A reproducible credit default training and prediction service"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+  "fastapi==0.115.8",
+  "uvicorn[standard]==0.34.0",
+  "pydantic==2.10.6",
+  "pandas==2.2.3",
+  "numpy==2.2.2",
+  "scikit-learn==1.6.1",
+  "SQLAlchemy==2.0.38",
+  "psycopg[binary]==3.2.4",
+  "xgboost==2.1.4",
+  "lightgbm==4.5.0",
+  "optuna==4.2.1",
+  "mlflow==2.20.0",
+  "shap==0.46.0",
+  "joblib==1.4.2",
+  "matplotlib==3.10.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.3.4", "httpx==0.28.1"]
+
+[project.scripts]
+credit-default = "credit_default.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
