@@ -23,6 +23,16 @@ credit-default ingest --csv data/cs-training.csv
 credit-default train --trials 30 --model xgboost
 ```
 
+### Standalone SQLite feature view
+
+The SQL feature pipeline can also be loaded into a standalone `credit_data.db` at the repository root. It reads the default `data/cs-training.csv` path and creates/replaces `raw_credit_data` plus the `engineered_credit_features` view:
+
+```powershell
+python scripts/db_setup.py
+```
+
+Pass `--csv` and `--database` to use different paths. Query the engineered rows with `SELECT * FROM engineered_credit_features`; the view definition is in `sql/features.sql`.
+
 Choose `--model lightgbm` to tune LightGBM. Training reserves a stratified 20% holdout, performs seeded stratified 5-fold ROC-AUC tuning with Optuna on the remaining data, reports holdout ROC-AUC, average precision, and Brier score, logs the run to local MLflow (`./mlruns`), writes a SHAP feature-importance plot, and exports `models/credit_default.joblib`. At least ten rows from each target class are required. The exported model is refit on all labeled rows after the holdout evaluation.
 
 SQLite is the default. PostgreSQL can be used by passing a SQLAlchemy URL, for example `postgresql+psycopg://user:password@host:5432/credit`:
